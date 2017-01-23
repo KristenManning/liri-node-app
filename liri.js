@@ -1,19 +1,52 @@
+// Custom JS files 
 var k = require("./keys.js");
+
+// For reading random.txt
 var fs = require("fs");
+
+// APIs:
+var Twitter = require('twitter');
+var spotify = require('spotify');
+
+// -----------------------------------------------------------------
 
 var tKeys = k.twitterKeys
 
+var client = new Twitter(k.twitterKeys)
+
+// -----------------------------------------------------------------
+
+// Functions for each of the 3 actions: 
+
 var tweet = function(action_info){
-	console.log("tweets")
+	client.get('search/tweets', {from: '12345678kristen'}, function(error, tweets, response) {
+   		var statuses = tweets.statuses
+   		for (s in statuses){
+   			console.log(statuses[s].created_at)
+   			console.log(statuses[s].text)
+   			console.log("")
+   		}
+	});
 };
 
 var song = function(action_info){
+ 
+// spotify.search({ type: 'track', query: 'dancing in the moonlight' }, function(err, data) {
+//     if ( err ) {
+//         console.log('Error occurred: ' + err);
+//         return;
+    // }
+ 
+    // Do something with 'data' 
+// });
 	console.log(action_info)
 };
 
 var movie = function(action_info){
 	console.log(action_info)
 };
+
+// --------------------------------------------------------------------
 
 var takeAction = function(action_type,action_info){
 
