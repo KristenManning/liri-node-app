@@ -7,6 +7,7 @@ var fs = require("fs");
 // APIs:
 var Twitter = require('twitter');
 var spotify = require('spotify');
+var request = require('request');
 
 // -----------------------------------------------------------------
 
@@ -29,26 +30,45 @@ var tweet = function(action_info){
 	});
 };
 
-var song = function(action_info){
+var song = function(action_info, secondary_info){
  
-// spotify.search({ type: 'track', query: 'dancing in the moonlight' }, function(err, data) {
-//     if ( err ) {
-//         console.log('Error occurred: ' + err);
-//         return;
-    // }
- 
-    // Do something with 'data' 
-// });
-	console.log(action_info)
+	spotify.search({ type: 'track', query: (action_info + " " + secondary_info) }, function(err, data) {
+	    if ( err ) {
+	        console.log('Error occurred: ' + err);
+	        return;
+	    }
+	    var track_info = data.tracks.items[0];
+	 	console.log("ARTIST: " + track_info.artists[0].name)
+	 	console.log("TRACK NAME: " + track_info.name)
+	 	console.log("LINK TO PREVIEW: " + track_info.preview_url)
+	 	console.log("ALBUM NAME: " + track_info.album.name)
+	});
 };
 
 var movie = function(action_info){
-	console.log(action_info)
+	request('http://www.omdbapi.com/?t='+action_info+'&y=&plot=short&tomatoes=true&r=json', function (error, response, body) {
+  		if (!error && response.statusCode == 200) {
+  			var movie_info = body[0]
+  			console.log(movie_info)
+  			console.log(movie_info.Title)
+  			console.log("------")
+    		console.log("Title: " + movie_info.Title)
+    		console.log("Released: " + movie_info.Released) 
+    		console.log("IMDB Rating: " + movie_info.imdbRating) 
+    		console.log("Country (of Production): " + movie_info.Country) 
+    		console.log("Language: " + movie_info.Language) 
+    		console.log("Plot: " + movie_info.Plot) 
+    		console.log("Actors: " + movie_info.Actors) 
+    		// console.log("Title: " + response.Title) 
+    		// console.log("Title: " + response.Title) 
+
+  		}
+})
 };
 
 // --------------------------------------------------------------------
 
-var takeAction = function(action_type,action_info){
+var takeAction = function(action_type,action_info, secondary_info){
 
 	switch(action_type) {
 
@@ -57,9 +77,9 @@ var takeAction = function(action_type,action_info){
 
 		    case "spotify-this-song":
 		    	if (action_info){
-					return song(action_info);
+					return song(action_info, secondary_info);
 				}
-		    	return song("The Sign");
+		    	return song("The Sign", "Ace Of Base");
 
 		    case "movie-this":
 		    	if (action_info){
@@ -75,4 +95,4 @@ var takeAction = function(action_type,action_info){
 	}
 };
 
-takeAction(process.argv[2],process.argv[3])
+takeAction(process.argv[2],process.argv[3], process.argv[4])
