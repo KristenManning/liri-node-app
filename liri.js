@@ -48,10 +48,8 @@ var song = function(action_info, secondary_info){
 var movie = function(action_info){
 	request('http://www.omdbapi.com/?t='+action_info+'&y=&plot=short&tomatoes=true&r=json', function (error, response, body) {
   		if (!error && response.statusCode == 200) {
-  			var movie_info = body[0]
+  			var movie_info = JSON.parse(body)
   			console.log(movie_info)
-  			console.log(movie_info.Title)
-  			console.log("------")
     		console.log("Title: " + movie_info.Title)
     		console.log("Released: " + movie_info.Released) 
     		console.log("IMDB Rating: " + movie_info.imdbRating) 
@@ -59,8 +57,8 @@ var movie = function(action_info){
     		console.log("Language: " + movie_info.Language) 
     		console.log("Plot: " + movie_info.Plot) 
     		console.log("Actors: " + movie_info.Actors) 
-    		// console.log("Title: " + response.Title) 
-    		// console.log("Title: " + response.Title) 
+			console.log("Rotten Tomatoes Rating: " + movie_info.tomatoRating) 
+			console.log("Rotten Tomatoes URL: " + movie_info.tomatoURL) 
 
   		}
 })
