@@ -20,11 +20,10 @@ var client = new Twitter(k.twitterKeys)
 // Functions for each of the 3 actions: 
 
 var tweet = function(action_info){
-	client.get('search/tweets', {from: '12345678kristen'}, function(error, tweets, response) {
-   		var statuses = tweets.statuses
-   		for (s in statuses){
-   			console.log(statuses[s].created_at)
-   			console.log(statuses[s].text)
+	client.get('statuses/user_timeline', {from: '12345678kristen'}, function(error, tweets, response) {
+   		for (var s = 0; s < 20; s++){
+   			console.log(tweets[s].created_at)
+   			console.log(tweets[s].text)
    			console.log("")
    		}
 	});
